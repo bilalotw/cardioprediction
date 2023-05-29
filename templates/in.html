@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cardio Disease Predictor</title>
+    <style>
+      header {
+        padding: 20px;
+        text-decoration: underline;
+        text-underline-position: 20px;
+        text-align: center;
+        font-size: large;
+        font-weight: 900;
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f4f4f4;
+        margin: auto;
+        padding: 20px;
+        align-items: center;
+        border-style: double;
+        max-width: 30%;
+        max-height: 30%;
+        border-radius: 30px;
+        border-color: #3e8941;
+      }
+
+      .container {
+        margin-bottom: 15px;
+        text-align: center;
+        padding-left: 0;
+      }
+      .container label {
+        display: auto;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      .container input[type="number"],
+      .container input[type="radio"],
+      .container select {
+        margin-top: 5px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+      .container select {
+        width: 150px;
+      }
+      .container h1 {
+        padding: 20px;
+        align-items: center;
+        justify-content: center;
+        text-align: justify;
+      }
+      .container input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .predict-button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      .predict-button:hover {
+        background-color: #45a049;
+      }
+
+      .predict-button:focus {
+        outline: none;
+      }
+
+      .predict-button:active {
+        background-color: #3e8941;
+        transform: translateY(1px);
+      }
+      .prediction-container {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f4f4f4;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <div>
+    <header class="header">Cardiovascular Disease Predictor</header>
+  </div>
+  <body>
+    <section>
+      <div>
+        <form>
+          <div class="container">
+            <label for="age">Age (in days):</label>
+            <input type="number" id="age" name="age" />
+          </div>
+
+          <div class="container">
+            <label for="gender">Gender:</label>
+            <input
+              type="radio"
+              id="gender"
+              name="gender"
+              value="male"
+              required
+            />
+            <label for="gender">Male</label>
+            <input
+              type="radio"
+              id="gender_f"
+              name="gender"
+              value="female"
+              required
+            />
+            <label for="gender">Female</label>
+          </div>
+
+          <div class="container">
+            <label for="height">Height (cm):</label>
+            <input type="number" id="height" name="height" />
+          </div>
+
+          <div class="container">
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" />
+          </div>
+
+          <div class="container">
+            <label for="ap_hi">Systolic Blood Pressure:</label>
+            <input type="number" id="ap_hi" name="ap_hi" />
+          </div>
+
+          <div class="container">
+            <label for="ap_lo">Diastolic Blood Pressure:</label>
+            <input type="number" id="ap_lo" name="ap_lo" />
+          </div>
+
+          <div class="container">
+            <label for="cholesterol">Cholesterol:</label>
+            <select id="cholesterol" name="cholesterol">
+              <option value="select">Select</option>
+              <option value="normal">Normal</option>
+              <option value="above_normal">Above Normal</option>
+              <option value="well_above_normal">Well Above Normal</option>
+            </select>
+          </div>
+
+          <div class="container">
+            <label for="glucose">Glucose:</label>
+            <select id="glucose" name="glucose">
+              <option value="select">Select</option>
+              <option value="normal">Normal</option>
+              <option value="above_normal">Above Normal</option>
+              <option value="well_above_normal">Well Above Normal</option>
+            </select>
+          </div>
+
+          <div class="container">
+            <label for="smoke">Smoke:</label>
+            <input type="radio" id="smoke" name="smoke" value="yes" required />
+            <label for="smoke">Yes</label>
+            <input
+              type="radio"
+              id="smoke_no"
+              name="smoke"
+              value="no"
+              required
+            />
+            <label for="smoke_no">No</label>
+          </div>
+
+          <div class="container">
+            <label for="alco">Alcohol Intake:</label>
+            <input type="radio" id="alco" name="alco" value="yes" required />
+            <label for="alco">Yes</label>
+            <input type="radio" id="alco_no" name="alco" value="no" required />
+            <label for="alco_no">No</label>
+          </div>
+
+          <div class="container">
+            <label for="active">Physical activity:</label>
+            <input
+              type="radio"
+              id="active"
+              name="active"
+              value="active"
+              required
+            />
+            <label for="active">Active</label>
+            <input
+              type="radio"
+              id="active_no"
+              name="active"
+              value="not active"
+              required
+            />
+            <label for="active_no">Not Active</label>
+          </div>
+
+          <div class="container">
+            <button id="predictBtn" type="button" class="predict-button">
+              Predict
+            </button>
+          </div>
+        </form>
+        <div class="prediction-container">
+          <div id="predictionText"></div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const predictButton = document.getElementById("predictBtn");
+      const predictionText = document.getElementById("predictionText");
+
+      predictButton.addEventListener("click", () => {
+        const age = document.getElementById("age").value;
+        const gender = document.getElementById("gender").value;
+        const height = document.getElementById("height").value;
+        const weight = document.getElementById("weight").value;
+        const apHi = document.getElementById("ap_hi").value;
+        const apLo = document.getElementById("ap_lo").value;
+        const cholesterol = document.getElementById("cholesterol").value;
+        const glucose = document.getElementById("glucose").value;
+        const smoke = document.querySelector(
+          'input[name="smoke"]:checked'
+        ).value;
+        const alco = document.querySelector('input[name="alco"]:checked').value;
+        const active = document.querySelector(
+          'input[name="active"]:checked'
+        ).value;
+
+        // Send the form data to the server for prediction
+        fetch("/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            age,
+            gender,
+            height,
+            weight,
+            ap_hi: apHi,
+            ap_lo: apLo,
+            cholesterol,
+            glucose,
+            smoke,
+            alco,
+            active,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const predictionResult =
+              data.prediction === 1
+                ? "You are at risk of cardiovascular disease."
+                : "You are not at risk of cardiovascular disease.";
+            predictionText.textContent = `Prediction: ${predictionResult}`;
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
